@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import * as esbuild from "esbuild-wasm";
 import ReactDOM from "react-dom";
+import { unpkgPathPlugin } from "./plugins/unpkg-path-plugin";
 
 const App = () => {
   const [input, setInput] = useState("");
@@ -18,12 +19,19 @@ const App = () => {
   const onClick = async () => {
     if (!refWasm.current) return; // escape
     // access wasm API
-    const result = await refWasm.current.transform(input, {
-      loader: "jsx",
-      target: "es2015",
+    // const result = await refWasm.current.transform(input, {
+    //   loader: "jsx",
+    //   target: "es2015",
+    // }); // {code, map, error:[]}
+
+    const result = await refWasm.current.build({
+      entryPoints: ["index.js"],
+      bundle: true,
+      write: false,
+      plugins: [unpkgPathPlugin()],
     }); // {code, map, error:[]}
     // console.log(`result`, result);
-    setCode(result.code);
+    setCode(result);
   };
 
   useEffect(() => {
