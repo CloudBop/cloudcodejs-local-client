@@ -15,11 +15,15 @@ const App = () => {
     });
   };
 
-  const onClick = (): void => {
+  const onClick = async () => {
     if (!refWasm.current) return; // escape
-
     // access wasm API
-    console.log(refWasm.current);
+    const result = await refWasm.current.transform(input, {
+      loader: "jsx",
+      target: "es2015",
+    }); // {code, map, error:[]}
+    // console.log(`result`, result);
+    setCode(result.code);
   };
 
   useEffect(() => {
@@ -35,6 +39,7 @@ const App = () => {
         value={input}
         onChange={(e): void => setInput(e.target.value)}
         // htmlCols="30" htmlRows="10"
+        style={{ maxWidth: "99%", height: "99%" }}
       ></textarea>
       <div>
         <button
