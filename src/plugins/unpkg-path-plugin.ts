@@ -25,7 +25,7 @@ export const unpkgPathPlugin = () => {
       // handle root/entry file of 'index.js'
       build.onResolve(
         {
-          filter: /index.js*/,
+          filter: /(^index\.js$)/,
         },
         // return { path: args.path, namespace: "a" };
         () => ({ path: "index.js", namespace: "a" })
