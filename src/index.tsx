@@ -29,9 +29,11 @@ const App = () => {
       bundle: true,
       write: false,
       plugins: [unpkgPathPlugin()],
-    }); // {code, map, error:[]}
+    });
+
+    // interesting results here
     // console.log(`result`, result);
-    setCode(result);
+    setCode(result.outputFiles[0].text);
   };
 
   useEffect(() => {
