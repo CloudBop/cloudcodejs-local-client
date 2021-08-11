@@ -73,9 +73,13 @@ export const unpkgPathPlugin = () => {
             // `,
             contents:
               // - testing react import - it works!
+              // const React = require('react');
+              // const ReactDOM = require('react-dom');
               `
-              const message = require('react');
-              console.log(message);
+              import React, { useEffect } from 'react'
+              import ReactDOM from 'react-dom'
+              console.log(React, ReactDOM, useEffect);
+              
             `,
           };
         } else {
