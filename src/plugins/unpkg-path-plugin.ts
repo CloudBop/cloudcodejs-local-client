@@ -35,8 +35,9 @@ export const unpkgPathPlugin = () => {
               path: new URL(
                 // ./utils || ../utils
                 args.path,
-                // https://unpkg.com/library-currently-build
-                args.importer + "/"
+                // relative path for current import
+                // eg: https://unpkg.com/library-currently-build/src
+                "https://unpkg.com" + args.resolveDir + "/"
               ).href, // trailling slash is super important!
               /**
                * without trail it will create url from root rootdomain/utils
@@ -60,7 +61,7 @@ export const unpkgPathPlugin = () => {
         }
       );
       //
-      //transpile
+      //build
       build.onLoad({ filter: /.*/ }, async (args: any) => {
         console.log("onLoad", args);
         if (args.path === "index.js") {
@@ -70,16 +71,25 @@ export const unpkgPathPlugin = () => {
             //   import message from 'tiny-test-pkg';
             //   console.log(message);
             // `,
-            contents: `
-              const message = require('medium-test-pkg');
+            contents:
+              // - nested-test-pkg has nested imports! eg /src/helps/utils
+              `
+              const message = require('nested-test-pkg');
               console.log(message);
             `,
           };
         } else {
-          const { data } = await axios.get(args.path);
+          const { data, request } = await axios.get(args.path);
+          // console.log(`request`, request);
           return {
             loader: "jsx",
             contents: data,
+            resolveDir: new URL(
+              // chops off the /.index.js
+              "./",
+              //pathname to last file eg. some-library-url/src/
+              request.responseURL
+            ).pathname,
           };
         }
       });
