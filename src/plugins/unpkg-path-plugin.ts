@@ -28,7 +28,43 @@ export const unpkgPathPlugin = (inputCode: string) => {
   return {
     name: "unpkg-path-plugin",
     setup(build: esbuild.PluginBuild) {
-      // override esbuilds default resolver. - typically local fs
+      // handle root/entry file of 'index.js'
+      build.onResolve(
+        {
+          filter: /index.js*/,
+        },
+        // return { path: args.path, namespace: "a" };
+        () => ({ path: "index.js", namespace: "a" })
+      );
+
+      // handles relative paths within module
+      build.onResolve(
+        {
+          // ../ || ./
+          filter: /^\.+\//,
+        },
+        // return { path: args.path, namespace: "a" };
+        (args: any) => {
+          return {
+            namespace: "a",
+            path: new URL(
+              // ./utils || ../utils
+              args.path,
+              // relative path for current import
+              // eg: https://unpkg.com/library-currently-build/src
+              "https://unpkg.com" + args.resolveDir + "/"
+            ).href, // trailling slash is super important!
+            /**
+             * without trail it will create url from root rootdomain/utils
+             * as opposed to rootdomain/name-of-library/utils
+             * ...try below
+             * tiny-test-pkg | medium-test-pkg | nested-test-pkg
+             */
+          };
+        }
+      );
+
+      // handle main module file
       build.onResolve(
         {
           // regex against current filename (all)
@@ -36,30 +72,6 @@ export const unpkgPathPlugin = (inputCode: string) => {
         },
         //
         async (args: any) => {
-          console.log("onResolve", args);
-          if (args.path === "index.js") {
-            return { path: args.path, namespace: "a" };
-          }
-
-          if (args.path.includes("./") || args.path.includes("../")) {
-            return {
-              namespace: "a",
-              path: new URL(
-                // ./utils || ../utils
-                args.path,
-                // relative path for current import
-                // eg: https://unpkg.com/library-currently-build/src
-                "https://unpkg.com" + args.resolveDir + "/"
-              ).href, // trailling slash is super important!
-              /**
-               * without trail it will create url from root rootdomain/utils
-               * as opposed to rootdomain/name-of-library/utils
-               * ...try below
-               * tiny-test-pkg | medium-test-pkg | nested-test-pkg
-               */
-            };
-          }
-
           return {
             namespace: "a",
             path: `https://unpkg.com/${args.path}`,
