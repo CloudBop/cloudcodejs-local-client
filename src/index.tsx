@@ -40,6 +40,8 @@ const App = () => {
     // interesting results here
     // console.log(`result`, result);
     setCode(result.outputFiles[0].text);
+
+    eval(result.outputFiles[0].text);
   };
 
   useEffect(() => {
