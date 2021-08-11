@@ -43,6 +43,7 @@ const App = () => {
 
     // defensive
     try {
+      // ..wont catch async
       eval(result.outputFiles[0].text);
     } catch (error) {
       alert(error);
@@ -76,6 +77,8 @@ const App = () => {
       </div>
 
       <pre>{code}</pre>
+
+      <iframe src="test.html" frameBorder="0"></iframe>
     </div>
   );
 };
