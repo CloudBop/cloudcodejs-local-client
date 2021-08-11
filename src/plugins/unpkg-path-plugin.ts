@@ -1,7 +1,7 @@
 import * as esbuild from "esbuild-wasm";
 import axios from "axios";
 /**
- * Overrule esbuild when it tries to resolve libs
+ * Overrule esbuild when it tries to resolve/load npm libs
  * @returns {
  *    warnings: [],
  *    outputfiles:[{
