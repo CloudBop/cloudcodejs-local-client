@@ -29,6 +29,11 @@ const App = () => {
       bundle: true,
       write: false,
       plugins: [unpkgPathPlugin()],
+      define: {
+        "process.env.NODE_ENV": '"production"',
+        // webpack also does something similar, setting global
+        global: "window",
+      },
     });
 
     // interesting results here
