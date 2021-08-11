@@ -2,6 +2,18 @@ import { useEffect, useState, useRef } from "react";
 import * as esbuild from "esbuild-wasm";
 import ReactDOM from "react-dom";
 import { unpkgPathPlugin } from "./plugins/unpkg-path-plugin";
+import localForage from "localforage";
+
+const fileCache = localForage.createInstance({
+  name: "filecache",
+});
+
+//
+(async () => {
+  await fileCache.setItem("color", "red");
+  const color = await fileCache.getItem("color");
+  console.log(`color`, color);
+})();
 
 const App = () => {
   const [input, setInput] = useState("");
