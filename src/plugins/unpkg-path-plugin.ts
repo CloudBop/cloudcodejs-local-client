@@ -29,6 +29,22 @@ export const unpkgPathPlugin = () => {
             return { path: args.path, namespace: "a" };
           }
 
+          if (args.path.includes("./") || args.path.includes("../")) {
+            return {
+              namespace: "a",
+              path: new URL(
+                // ./utils || ../utils
+                args.path,
+                // https://unpkg.com/library-currently-build
+                args.importer + "/"
+              ).href, // trailling slash is super important!
+              /**
+               * without trail it will create url from root rootdomain/utils
+               * as opposed to rootdomain/name-of-library/utils
+               */
+            };
+          }
+
           return {
             namespace: "a",
             path: `https://unpkg.com/${args.path}`,
@@ -55,7 +71,7 @@ export const unpkgPathPlugin = () => {
             //   console.log(message);
             // `,
             contents: `
-              const message = require('tiny-test-pkg');
+              const message = require('medium-test-pkg');
               console.log(message);
             `,
           };
