@@ -32,11 +32,31 @@ export const fetchPlugin = (inputCode: string) => {
           const { data, request } = await axios.get(args.path);
 
           // match.regex file suffix is .css
-          const loader = args.path.match(/.css$/) ? "css" : "jsx";
+          const fileType = args.path.match(/.css$/) ? "css" : "jsx";
+
+          //sanitise css - breaks on fontfiles, @import, url(). good enough for app purposes
+          const escaped = data
+            // remove newlines
+            .replace(/\n/g, "")
+            // escape dble quotes
+            .replace(/"/g, '\\"')
+            // escape single quotes
+            .replace(/'/g, "\\'");
+
+          const contents = // if css then append the string via JSDOM
+            // hacky way to get around that esbuild doesn't account for wasm in browser for css loaders
+            // but it works!
+            fileType === "css"
+              ? `
+              const style = document.createElement('style');
+              style.innerText = '${escaped}';
+              document.head.appendChild(style);
+            `
+              : data;
 
           const result: esbuild.OnLoadResult = {
-            loader: loader,
-            contents: data,
+            loader: "jsx",
+            contents: contents,
             resolveDir: new URL(
               // chops off the /.index.js
               "./",
