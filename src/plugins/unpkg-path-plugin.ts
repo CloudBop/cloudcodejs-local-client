@@ -72,9 +72,9 @@ export const unpkgPathPlugin = () => {
             //   console.log(message);
             // `,
             contents:
-              // - nested-test-pkg has nested imports! eg /src/helps/utils
+              // - testing react import - it works!
               `
-              const message = require('nested-test-pkg');
+              const message = require('react');
               console.log(message);
             `,
           };
