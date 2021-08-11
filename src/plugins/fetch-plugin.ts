@@ -28,10 +28,14 @@ export const fetchPlugin = (inputCode: string) => {
             args.path
           );
           if (cachedResult) return cachedResult;
-
+          //
           const { data, request } = await axios.get(args.path);
+
+          // match.regex file suffix is .css
+          const loader = args.path.match(/.css$/) ? "css" : "jsx";
+
           const result: esbuild.OnLoadResult = {
-            loader: "jsx",
+            loader: loader,
             contents: data,
             resolveDir: new URL(
               // chops off the /.index.js
