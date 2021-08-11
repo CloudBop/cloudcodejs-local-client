@@ -3,13 +3,13 @@ import axios from "axios";
 /**
  * Overrule esbuild when it tries to resolve/load npm libs
  * @returns {
- *    warnings: [],
- *    outputfiles:[{
- *      contents: Uint8Array(n) […]
- *      path: "<stdout>"
- *      text: "escaped? /nJS"
- *      get_text();
- *     }]
+ *   warnings: [],
+ *   outputfiles:[{
+ *     contents: Uint8Array(n) […]
+ *     path: "<stdout>"
+ *     text: "escaped? /nJS"
+ *     get_text();
+ *   }]
  * }
  */
 export const unpkgPathPlugin = () => {
@@ -43,8 +43,12 @@ export const unpkgPathPlugin = () => {
         if (args.path === "index.js") {
           return {
             loader: "jsx",
+            // contents: `
+            //   import message from 'tiny-test-pkg';
+            //   console.log(message);
+            // `,
             contents: `
-              import message from 'tiny-test-pkg';
+              const message = require('tiny-test-pkg');
               console.log(message);
             `,
           };
