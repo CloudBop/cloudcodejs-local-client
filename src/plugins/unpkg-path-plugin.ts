@@ -24,7 +24,7 @@ const fileCache = localForage.createInstance({
  *   }]
  * }
  */
-export const unpkgPathPlugin = () => {
+export const unpkgPathPlugin = (inputCode: string) => {
   return {
     name: "unpkg-path-plugin",
     setup(build: esbuild.PluginBuild) {
@@ -77,16 +77,7 @@ export const unpkgPathPlugin = () => {
             //   import message from 'tiny-test-pkg';
             //   console.log(message);
             // `,
-            contents:
-              // - testing react import - it works!
-              // const React = require('react');
-              // const ReactDOM = require('react-dom');
-              `
-              import React, { useEffect } from 'react'
-              import ReactDOM from 'react-dom'
-              console.log(React, ReactDOM, useEffect);
-              
-            `,
+            contents: inputCode,
           };
         } else {
           // check cache for this file
