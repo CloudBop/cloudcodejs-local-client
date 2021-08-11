@@ -1,5 +1,17 @@
 import * as esbuild from "esbuild-wasm";
 import axios from "axios";
+import localForage from "localforage";
+
+const fileCache = localForage.createInstance({
+  name: "filecache",
+});
+//
+// (async () => {
+//   await fileCache.setItem("color", "red");
+//   const color = await fileCache.getItem("color");
+//   console.log(`color`, color);
+// })();
+
 /**
  * Overrule esbuild when it tries to resolve/load npm libs
  * @returns {
@@ -42,6 +54,8 @@ export const unpkgPathPlugin = () => {
               /**
                * without trail it will create url from root rootdomain/utils
                * as opposed to rootdomain/name-of-library/utils
+               * ...try below
+               * tiny-test-pkg | medium-test-pkg | nested-test-pkg
                */
             };
           }
@@ -50,14 +64,6 @@ export const unpkgPathPlugin = () => {
             namespace: "a",
             path: `https://unpkg.com/${args.path}`,
           };
-
-          // else if (args.path === "tiny-test-pkg") {
-          //   // find the lib
-          //   return {
-          //     path: "https://unpkg.com/tiny-test-pkg@1.0.0/index.js",
-          //     namespace: "a",
-          //   };
-          // }
         }
       );
       //
@@ -83,9 +89,14 @@ export const unpkgPathPlugin = () => {
             `,
           };
         } else {
+          // check cache for this file
+          const cachedResult = await fileCache.getItem<esbuild.OnLoadResult>(
+            args.path
+          );
+          if (cachedResult) return cachedResult;
+
           const { data, request } = await axios.get(args.path);
-          // console.log(`request`, request);
-          return {
+          const result: esbuild.OnLoadResult = {
             loader: "jsx",
             contents: data,
             resolveDir: new URL(
@@ -95,6 +106,9 @@ export const unpkgPathPlugin = () => {
               request.responseURL
             ).pathname,
           };
+
+          await fileCache.setItem(args.path, result);
+          return result;
         }
       });
     },
