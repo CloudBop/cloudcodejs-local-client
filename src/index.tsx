@@ -6,7 +6,7 @@ import { fetchPlugin } from "./plugins/fetch-plugin";
 
 const App = () => {
   const [input, setInput] = useState("");
-  const [code, setCode] = useState("");
+  // const [code, setCode] = useState("");
   const refWasm = useRef<any>();
   const refIframe = useRef<any>();
 
@@ -25,6 +25,9 @@ const App = () => {
     //   loader: "jsx",
     //   target: "es2015",
     // }); // {code, map, error:[]}
+
+    //reset iframe
+    refIframe.current.srcdoc = html;
 
     const result = await refWasm.current.build({
       entryPoints: ["index.js"],
@@ -97,8 +100,6 @@ const App = () => {
           Transpile
         </button>
       </div>
-
-      <pre>{code}</pre>
 
       <iframe
         ref={refIframe}
