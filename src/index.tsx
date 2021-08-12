@@ -8,6 +8,7 @@ const App = () => {
   const [input, setInput] = useState("");
   const [code, setCode] = useState("");
   const refWasm = useRef<any>();
+  const refIframe = useRef<any>();
 
   const startService = async () => {
     refWasm.current = await esbuild.startService({
@@ -39,7 +40,13 @@ const App = () => {
 
     // interesting results here
     // console.log(`result`, result);
-    setCode(result.outputFiles[0].text);
+    // setCode(result.outputFiles[0].text);
+    // console.log(refIframe.current);
+    refIframe.current.contentWindow.postMessage(
+      result.outputFiles[0].text,
+      // allow commincation from outter sources
+      "*"
+    );
   };
 
   useEffect(() => {
@@ -48,9 +55,18 @@ const App = () => {
   }, []);
 
   const html = `
-    <script>
-      ${code}
-    </script>
+    <html>
+      <head> </head>
+      <body>
+        <div id="root"> </div>
+        <script>
+        window.addEventListener('message', (event)=>{
+          console.log(event)
+          eval(event.data);
+        }, false);
+        </script>
+      </body>
+    </html>
   `;
 
   return (
@@ -67,7 +83,7 @@ const App = () => {
         <button
           onClick={() => {
             onClick();
-            setCode(input);
+            // setCode(input);
           }}
         >
           Transpile
@@ -77,12 +93,13 @@ const App = () => {
       <pre>{code}</pre>
 
       <iframe
+        ref={refIframe}
         // allows = "allow-same-origin" || "" | false - sandboxes from other JS scopes
         sandbox="allow-scripts"
         title="myiframe-example"
         srcDoc={html}
         // src="test.html"
-        frameBorder="0"
+        // frameBorder="0"
       ></iframe>
     </div>
   );
