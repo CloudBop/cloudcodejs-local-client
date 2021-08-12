@@ -40,20 +40,18 @@ const App = () => {
     // interesting results here
     // console.log(`result`, result);
     setCode(result.outputFiles[0].text);
-
-    // defensive
-    try {
-      // ..wont catch async
-      eval(result.outputFiles[0].text);
-    } catch (error) {
-      alert(error);
-    }
   };
 
   useEffect(() => {
     startService();
     // return () => {} //cleanup
   }, []);
+
+  const html = `
+    <script>
+      ${code}
+    </script>
+  `;
 
   return (
     <div>
@@ -78,7 +76,14 @@ const App = () => {
 
       <pre>{code}</pre>
 
-      <iframe src="test.html" frameBorder="0"></iframe>
+      <iframe
+        // allows = "allow-same-origin" || "" | false - sandboxes from other JS scopes
+        sandbox="allow-scripts"
+        title="myiframe-example"
+        srcDoc={html}
+        // src="test.html"
+        frameBorder="0"
+      ></iframe>
     </div>
   );
 };
