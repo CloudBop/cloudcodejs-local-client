@@ -3,10 +3,10 @@ import * as esbuild from "esbuild-wasm";
 import ReactDOM from "react-dom";
 import { unpkgPathPlugin } from "./plugins/unpkg-path-plugin";
 import { fetchPlugin } from "./plugins/fetch-plugin";
-
+import CodeEditor from "./components/code-editor";
 const App = () => {
   const [input, setInput] = useState("");
-  // const [code, setCode] = useState("");
+  const [code, setCode] = useState("");
   const refWasm = useRef<any>();
   const refIframe = useRef<any>();
 
@@ -82,6 +82,7 @@ const App = () => {
 
   return (
     <div>
+      <CodeEditor />
       <textarea
         name=""
         id=""
@@ -94,18 +95,18 @@ const App = () => {
         <button
           onClick={() => {
             onClick();
-            // setCode(input);
+            setCode(input);
           }}
         >
           Transpile
         </button>
+        <pre>{code}</pre>
       </div>
-
       <iframe
         ref={refIframe}
         // allows = "allow-same-origin" || "" | false - sandboxes from other JS scopes
         sandbox="allow-scripts"
-        title="myiframe-example"
+        title="code-preview"
         srcDoc={html}
         // src="test.html"
         // frameBorder="0"
