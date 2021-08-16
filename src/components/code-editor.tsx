@@ -32,13 +32,16 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ initialValue, onChange }) => {
     //get current value from editor
     const unformatted = editorRef.current.getModel().getValue();
     // format
-    const formatted = prettier.format(unformatted, {
-      parser: "babel",
-      plugins: [parser],
-      useTabs: false,
-      semi: true,
-      singleQuote: true,
-    });
+    const formatted = prettier
+      .format(unformatted, {
+        parser: "babel",
+        plugins: [parser],
+        useTabs: false,
+        semi: true,
+        singleQuote: true,
+      })
+      // removes the \n concated to end if string by prettier default
+      .replace(/\n$/, "");
     // set formatted value
     editorRef.current.setValue(formatted);
   };
