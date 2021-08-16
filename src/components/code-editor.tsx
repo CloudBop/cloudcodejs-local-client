@@ -6,6 +6,10 @@ import prettier from "prettier";
 import parser from "prettier/parser-babel";
 import { useRef } from "react";
 import "./code-editor.css";
+import "./syntax.css";
+import codeShift from "jscodeshift";
+import Highlighter from "monaco-jsx-highlighter";
+
 interface CodeEditorProps {
   initialValue: string;
   onChange: (value: string) => void;
@@ -27,6 +31,21 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ initialValue, onChange }) => {
     });
     // set tab size
     monacoEditor.getModel()?.updateOptions({ tabSize: 2 });
+
+    const highlighter = new Highlighter(
+      // @ts-ignore
+      window.monaco,
+      codeShift,
+      monacoEditor
+    );
+
+    highlighter.highLightOnDidChangeModelContent(
+      //overrule default logging
+      () => {},
+      () => {},
+      undefined, // dont log errors in user JSX
+      () => {}
+    );
   };
   const onFormatClick = () => {
     //get current value from editor
