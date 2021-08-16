@@ -1,4 +1,7 @@
-import MonacoEditor from "@monaco-editor/react";
+import MonacoEditor, {
+  // type definition
+  EditorDidMount,
+} from "@monaco-editor/react";
 
 interface CodeEditorProps {
   initialValue: string;
@@ -6,17 +9,21 @@ interface CodeEditorProps {
 }
 
 const CodeEditor: React.FC<CodeEditorProps> = ({ initialValue, onChange }) => {
-  const onEditorDidMount = (
+  // using typedef to annotate arity
+  const onEditorDidMount: EditorDidMount = (
     // current string value editor is set to
-    getValue: () => string,
+    getValue,
     // monacoEditorRef
-    monacoEditor: any
+    monacoEditor
   ) => {
+    // onchange
+
     monacoEditor.onDidChangeModelContent(() => {
       // console.log(getValue());
       onChange(getValue());
     });
-    // onChange();
+    // set tab size
+    monacoEditor.getModel()?.updateOptions({ tabSize: 2 });
   };
   return (
     <MonacoEditor
