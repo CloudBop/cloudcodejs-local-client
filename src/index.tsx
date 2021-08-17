@@ -44,7 +44,7 @@ const App = () => {
 
     // interesting results here
     // console.log(`result`, result);
-    // setCode(result.outputFiles[0].text);
+    setCode(result.outputFiles[0].text);
     // console.log(refIframe.current);
     refIframe.current.contentWindow.postMessage(
       result.outputFiles[0].text,
@@ -99,7 +99,7 @@ const App = () => {
         <button
           onClick={() => {
             onClick();
-            setCode(input);
+            // setCode(input);
           }}
         >
           Transpile
