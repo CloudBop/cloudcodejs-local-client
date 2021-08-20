@@ -54,6 +54,9 @@ const Preview: React.FC<PreviewProps> = ({ code }) => {
       srcDoc={html}
       // src="test.html"
       // frameBorder="0"
+      style={{
+        backgroundColor: "snow",
+      }}
     />
   );
 };
