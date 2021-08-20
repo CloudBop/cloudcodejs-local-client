@@ -94,7 +94,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ initialValue, onChange }) => {
         // includes syntax-highlight, intellisense ect
         language={"javascript"}
         theme={"dark"}
-        height={"500px"}
+        height={"100%"}
       />
     </div>
   );
