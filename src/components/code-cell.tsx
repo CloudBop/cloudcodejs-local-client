@@ -19,7 +19,7 @@ const CodeCell = () => {
           initialValue={"const a = 1;"}
           onChange={(value): void => setInput(value)}
         />
-        <div>
+        {/* <div>
           <button
             onClick={() => {
               onClick();
@@ -29,7 +29,7 @@ const CodeCell = () => {
             Transpile
           </button>
           <pre>{code}</pre>
-        </div>
+        </div> */}
         <Preview code={code} />
       </div>
     </Resizable>
