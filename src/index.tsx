@@ -4,7 +4,10 @@ import CodeCell from "./components/code-cell";
 
 const App = () => {
   return (
-    <div>
+    <div
+    // className={"app"}
+    // style={{ height: "100%", display: "flex", flexDirection: "row" }}
+    >
       <CodeCell />
       {/* <CodeCell /> */}
     </div>
