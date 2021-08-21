@@ -35,20 +35,22 @@ const Preview: React.FC<PreviewProps> = ({ code }) => {
   const refIframe = useRef<any>();
 
   useEffect(() => {
-    //reset iframe
     // console.log(refIframe.current);
+    //reset iframe
     refIframe.current.srcdoc = html;
-    refIframe.current.contentWindow.postMessage(
-      code,
-      // allow commincation from outter sources
-      "*"
-    );
-
+    // otherwise chance it could run before prev  update
+    setTimeout(() => {
+      refIframe.current.contentWindow.postMessage(
+        code,
+        // allow commincation from outter sources
+        "*"
+      );
+    }, 50);
+    //
     return () => {
       // onmount or next invocation of useEffect
     };
   }, [code]);
-
   return (
     <div className={"preview-wrapper"}>
       <iframe
