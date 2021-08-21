@@ -21,19 +21,23 @@ const Resizable: React.FC<ResizableProps> = ({ direction, children }) => {
       if (timer) {
         clearTimeout(timer);
       }
-      //
+      //debounce
       timer = setTimeout(() => {
         setInnerHeight(window.innerHeight);
         setInnerWidth(window.innerWidth);
+        // required to overrule max/min constrains, broken due to explicit 'width'={ N(px) }
+        if (window.innerWidth * 0.75 < width) {
+          setWidth(window.innerWidth * 0.75);
+        }
       }, 100);
     };
+    //
     window.addEventListener("resize", listen);
-
     return () => {
       // onUnmount | rerendered & useEffect invoked
       window.removeEventListener("resize", listen);
     };
-  }, []);
+  }, [width]);
 
   if (direction === "horizontal") {
     resizableProps = {
@@ -42,6 +46,7 @@ const Resizable: React.FC<ResizableProps> = ({ direction, children }) => {
       maxConstraints: [innerWidth * 0.9, Infinity],
       // cheat the 100% problem
       height: Infinity,
+      // will overrule max.min constraints, see listen()
       width: width,
       resizeHandles: ["e"],
       onResizeStop: (evt, data) => {
