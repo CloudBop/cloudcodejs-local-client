@@ -7,7 +7,7 @@ let service: esbuild.Service;
 
 export default async function esbuildBundler(rawCodeInput: string) {
   if (!service) {
-    await esbuild.startService({
+    service = await esbuild.startService({
       worker: true,
       // our binary lives here
       wasmURL: "https://unpkg.com/esbuild-wasm@0.8.27/esbuild.wasm",
