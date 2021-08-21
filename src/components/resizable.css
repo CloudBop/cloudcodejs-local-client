@@ -5,6 +5,15 @@
   background-position: 50%;
 }
 
+.resize-horizontal {
+  display: flex;
+  flex-direction: row;
+}
+
+.resize-vertical {
+  width: 100%;
+}
+
 .react-resizable-handle-s {
   height: 10px;
   width: 100%;
