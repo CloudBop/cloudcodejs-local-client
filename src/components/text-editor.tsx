@@ -1,12 +1,15 @@
 import MDEditor from "@uiw/react-md-editor";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 const TextEditor: React.FC = () => {
   const [isEdit, setIsEdit] = useState(false);
-
+  const ref = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
-    // effect
-    const listener = () => {
+    const listener = (e: MouseEvent) => {
+      if (ref.current && e.target && ref.current.contains(e.target as Node)) {
+        // console.log("elemnt clicked is within the md editor")
+        return;
+      }
       setIsEdit(false);
     };
 
@@ -18,7 +21,7 @@ const TextEditor: React.FC = () => {
     );
 
     return () => {
-      // cleanup
+      // onMount || rerender&useEffect called
       document.removeEventListener(
         "click",
         listener,
@@ -30,7 +33,8 @@ const TextEditor: React.FC = () => {
 
   if (isEdit) {
     return (
-      <div>
+      // useRef for comparison
+      <div ref={ref}>
         <MDEditor />
       </div>
     );
