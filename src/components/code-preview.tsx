@@ -14,18 +14,26 @@ const html = `
       <body>
         <div id="root"> </div>
         <script>
-        window.addEventListener('message', (event)=>{
-          
-          try {
-            
-            eval(event.data);
-
-          } catch (error) {
+          const handleError = (error)=> {
             const root = document.querySelector('#root');
             root.innerHTML = '<div style="color:red;" id="error-message"> <h4>Runtime Error </h4>' + error + '</div>';
+            console.log(error)
             throw error;
           }
-        }, false);
+          //catch async errors - exp with setTimeout in code editor
+          window.addEventListener('error', (event)=>{
+            event.preventDefault();
+            const err = handleError(event.error);
+          });
+
+          window.addEventListener('message', (event)=>{
+            try {
+              eval(event.data);
+            } catch (error) {
+              console.log(error)
+              const err = handleError(error);
+            }
+          }, false);
         </script>
       </body>
     </html>
