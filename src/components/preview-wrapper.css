@@ -13,7 +13,18 @@
   /* background-color: snow; */
 }
 
-// when dragging outside of current iframe, handler will stop
+.preview-error {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  color: red;
+}
+
+.preview-error > h2 {
+  font-weight: 900;
+}
+
+/* when dragging outside of current iframe, handler will stop*/
 .react-draggable-transparent-selection .preview-wrapper {
   pointer-events: none;
 }

@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import "./preview-wrapper.css";
 interface PreviewProps {
   code: string;
+  bundlingError: string;
 }
 
 const html = `
@@ -39,7 +40,7 @@ const html = `
     </html>
   `;
 
-const Preview: React.FC<PreviewProps> = ({ code }) => {
+const Preview: React.FC<PreviewProps> = ({ code, bundlingError }) => {
   const refIframe = useRef<any>();
 
   useEffect(() => {
@@ -59,6 +60,7 @@ const Preview: React.FC<PreviewProps> = ({ code }) => {
       // onmount or next invocation of useEffect
     };
   }, [code]);
+  console.log(`bundlingError`, bundlingError);
   return (
     <div className={"preview-wrapper"}>
       <iframe
@@ -73,6 +75,12 @@ const Preview: React.FC<PreviewProps> = ({ code }) => {
         // src="test.html"
         // frameBorder="0"
       />
+      {bundlingError && (
+        <div className="preview-error">
+          <h2> Transpilation Error: </h2>
+          {bundlingError}
+        </div>
+      )}
     </div>
   );
 };

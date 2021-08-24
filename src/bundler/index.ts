@@ -20,17 +20,26 @@ export default async function esbuildBundler(rawCodeInput: string) {
   //   target: "es2015",
   // }); // {code, map, error:[]}
 
-  const result = await service.build({
-    entryPoints: ["index.js"],
-    bundle: true,
-    write: false,
-    plugins: [unpkgPathPlugin(), fetchPlugin(rawCodeInput)],
-    define: {
-      "process.env.NODE_ENV": '"production"',
-      // webpack also does something similar, setting global
-      global: "window",
-    },
-  });
-
-  return result.outputFiles[0].text;
+  try {
+    const result = await service.build({
+      entryPoints: ["index.js"],
+      bundle: true,
+      write: false,
+      plugins: [unpkgPathPlugin(), fetchPlugin(rawCodeInput)],
+      define: {
+        "process.env.NODE_ENV": '"production"',
+        // webpack also does something similar, setting global
+        global: "window",
+      },
+    });
+    return {
+      code: result.outputFiles[0].text,
+      err: "",
+    };
+  } catch (error) {
+    return {
+      code: "",
+      err: error.message,
+    };
+  }
 }

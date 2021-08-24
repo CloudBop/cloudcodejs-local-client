@@ -6,7 +6,7 @@ import Resizable from "./resizable";
 const CodeCell = () => {
   const [input, setInput] = useState("");
   const [code, setCode] = useState("");
-
+  const [err, setErr] = useState("");
   // const onClick = async () => {
   //   const output = await bundle(input);
   //   setCode(output);
@@ -15,7 +15,8 @@ const CodeCell = () => {
   useEffect(() => {
     let timer = setTimeout(async () => {
       const output = await bundle(input);
-      setCode(output);
+      setCode(output.code);
+      setErr(output.err);
     }, 1000);
 
     return () => {
@@ -23,6 +24,8 @@ const CodeCell = () => {
       clearTimeout(timer);
     };
   }, [input]);
+
+  console.log(`err`, err);
 
   return (
     <Resizable direction="vertical">
@@ -41,8 +44,7 @@ const CodeCell = () => {
             onChange={(value): void => setInput(value)}
           />
         </Resizable>
-
-        <Preview code={code} />
+        <Preview code={code} bundlingError={err} />
       </div>
     </Resizable>
   );
