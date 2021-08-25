@@ -35,13 +35,13 @@ const TextEditor: React.FC = () => {
     return (
       // useRef for comparison
       <div ref={ref}>
-        <MDEditor />
+        <MDEditor className="text-editor" />
       </div>
     );
   } else {
     return (
       <div onClick={() => setIsEdit(true)}>
-        <MDEditor.Markdown source={"# Header"} />
+        <MDEditor.Markdown className="text-editor" source={"# Header"} />
       </div>
     );
   }
