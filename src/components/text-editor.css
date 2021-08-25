@@ -1,0 +1,10 @@
+/* remove bulma .title -conflicts with .title set via MDEditor */
+.w-md-editor .title {
+  line-height: unset;
+  font-weight: unset;
+  font-size: unset;
+}
+
+.w-md-editor ul {
+  line-height: 1;
+}
