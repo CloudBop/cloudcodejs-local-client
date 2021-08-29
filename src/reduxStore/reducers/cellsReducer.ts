@@ -1,3 +1,4 @@
+import { stat } from "fs";
 import { ActionType } from "../action-types";
 import { Action } from "../actions";
 import { Cell } from "../cell";
@@ -24,7 +25,17 @@ export function cellsReducer(
 ): CellsReducerState {
   switch (action.type) {
     case ActionType.UPDATE_CELL:
-      return state;
+      const { id, content } = action.payload;
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          [id]: {
+            ...state.data[id],
+            content,
+          },
+        },
+      };
     case ActionType.DELETE_CELL:
       return state;
     case ActionType.MOVE_CELL:
