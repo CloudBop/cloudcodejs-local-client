@@ -21,7 +21,10 @@ const initialState: CellsReducerState = {
 
 const cellsReducer = produce(
   // immer allows 'mutable' state syntax
-  (state: CellsReducerState, action: Action): CellsReducerState | void => {
+  (
+    state: CellsReducerState = initialState,
+    action: Action
+  ): CellsReducerState | void => {
     switch (action.type) {
       case ActionType.UPDATE_CELL:
         const { id, content } = action.payload;
