@@ -36,7 +36,16 @@ const cellsReducer = produce(
         state.order = state.order.filter((id) => id !== action.payload);
         return;
       case ActionType.MOVE_CELL:
-        return state;
+        const { direction } = action.payload;
+        //
+        const idx = state.order.findIndex((id) => id === action.payload.id);
+        const targetIdx = direction === "up" ? idx - 1 : idx + 1;
+        const oobound = targetIdx < 0 || targetIdx > state.order.length - 1;
+        if (oobound) return;
+        //swap cells
+        state.order[idx] = state.order[targetIdx];
+        state.order[targetIdx] = action.payload.id;
+        return;
       case ActionType.INSERT_CELL_BEFORE:
         return state;
 
