@@ -1,4 +1,4 @@
-import { stat } from "fs";
+import produce from "immer";
 import { ActionType } from "../action-types";
 import { Action } from "../actions";
 import { Cell } from "../cell";
@@ -19,33 +19,26 @@ const initialState: CellsReducerState = {
   data: {},
 };
 
-export function cellsReducer(
-  state: CellsReducerState,
-  action: Action
-): CellsReducerState {
-  switch (action.type) {
-    case ActionType.UPDATE_CELL:
-      const { id, content } = action.payload;
-      return {
-        ...state,
-        data: {
-          ...state.data,
-          [id]: {
-            ...state.data[id],
-            content,
-          },
-        },
-      };
-    case ActionType.DELETE_CELL:
-      return state;
-    case ActionType.MOVE_CELL:
-      return state;
-    case ActionType.INSERT_CELL_BEFORE:
-      return state;
+const cellsReducer = produce(
+  // immer allows 'mutable' state syntax
+  (state: CellsReducerState, action: Action): CellsReducerState | void => {
+    switch (action.type) {
+      case ActionType.UPDATE_CELL:
+        const { id, content } = action.payload;
+        state.data[id].content = content;
+        return;
 
-    default:
-      return state;
+      case ActionType.DELETE_CELL:
+        return state;
+      case ActionType.MOVE_CELL:
+        return state;
+      case ActionType.INSERT_CELL_BEFORE:
+        return state;
+
+      default:
+        return state;
+    }
   }
-}
+);
 
 export default cellsReducer;
