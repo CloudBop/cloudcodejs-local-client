@@ -29,23 +29,29 @@ const cellsReducer = produce(
       case ActionType.UPDATE_CELL:
         const { id, content } = action.payload;
         state.data[id].content = content;
-        return;
+        //using immer, return can be undefined
+        //...but TS will typecheck state as [ ... | undefined ]
+        return state;
 
       case ActionType.DELETE_CELL:
         delete state.data[action.payload];
         state.order = state.order.filter((id) => id !== action.payload);
-        return;
+        //...but TS will typecheck state as [ ... | undefined ]
+        return state;
       case ActionType.MOVE_CELL:
         const { direction } = action.payload;
         //
         const idx = state.order.findIndex((id) => id === action.payload.id);
         const targetIdx = direction === "up" ? idx - 1 : idx + 1;
         const oobound = targetIdx < 0 || targetIdx > state.order.length - 1;
-        if (oobound) return;
+        if (oobound)
+          //...but TS will typecheck state as [ ... | undefined ]
+          return state;
         //swap cells
         state.order[idx] = state.order[targetIdx];
         state.order[targetIdx] = action.payload.id;
-        return;
+        //...but TS will typecheck state as [ ... | undefined ]
+        return state;
       case ActionType.INSERT_CELL_BEFORE: {
         const newCell: Cell = {
           id: randomId(),
@@ -56,9 +62,9 @@ const cellsReducer = produce(
         const idx = state.order.findIndex((id) => id === action.payload.id);
         if (idx < 0) state.order.push(newCell.id);
         else state.order.splice(idx, 0, newCell.id);
-        return;
+        //...but TS will typecheck state as [ ... | undefined ]
+        return state;
       }
-
       default:
         return state;
     }
