@@ -46,13 +46,26 @@ const cellsReducer = produce(
         state.order[idx] = state.order[targetIdx];
         state.order[targetIdx] = action.payload.id;
         return;
-      case ActionType.INSERT_CELL_BEFORE:
-        return state;
+      case ActionType.INSERT_CELL_BEFORE: {
+        const newCell: Cell = {
+          id: randomId(),
+          type: action.payload.type,
+          content: "",
+        };
+        state.data[newCell.id] = newCell;
+        const idx = state.order.findIndex((id) => id === action.payload.id);
+        if (idx < 0) state.order.push(newCell.id);
+        else state.order.splice(idx, 0, newCell.id);
+        return;
+      }
 
       default:
         return state;
     }
   }
 );
+
+//
+const randomId = () => Math.random().toString(36).substr(2, 5);
 
 export default cellsReducer;
