@@ -16,8 +16,15 @@ const CodeCell: React.FC<ICodeCellProps> = ({ cell }) => {
   const bundle = useTypedSelector((state) => state.bundles[cell.id]);
   // const [code, setCode] = useState("");
   // const [err, setErr] = useState("");
-  console.log(bundle);
+
   useEffect(() => {
+    // including [bundle] will cause infinite loop... ignore exhastive deps
+    if (!bundle) {
+      createBundle(cell.id, cell.content);
+      // on inital load ignore first setTimeout.
+      return;
+    }
+
     let timer = setTimeout(async () => {
       // thunk fires async actions
       await createBundle(cell.id, cell.content);
@@ -28,6 +35,7 @@ const CodeCell: React.FC<ICodeCellProps> = ({ cell }) => {
       clearTimeout(timer);
     };
     // if in render phase or as props - ensure createBundle is memoed or will cause useEffect to fire every pass
+    // eslint-disable-next-line
   }, [cell.id, cell.content, createBundle]);
 
   return (
