@@ -52,7 +52,7 @@ const cellsReducer = produce(
         state.order[targetIdx] = action.payload.id;
         //...but TS will typecheck state as [ ... | undefined ]
         return state;
-      case ActionType.INSERT_CELL_BEFORE: {
+      case ActionType.INSERT_CELL_AFTER: {
         const newCell: Cell = {
           id: randomId(),
           type: action.payload.type,
@@ -60,8 +60,15 @@ const cellsReducer = produce(
         };
         state.data[newCell.id] = newCell;
         const idx = state.order.findIndex((id) => id === action.payload.id);
-        if (idx < 0) state.order.push(newCell.id);
-        else state.order.splice(idx, 0, newCell.id);
+
+        //insertAfter
+        if (idx < 0) state.order.unshift(newCell.id);
+        else state.order.splice(idx + 1, 0, newCell.id);
+
+        //insertBefore
+        // if (idx < 0) state.order.push(newCell.id);
+        // else state.order.splice(idx, 0, newCell.id);
+
         //...but TS will typecheck state as [ ... | undefined ]
         return state;
       }
