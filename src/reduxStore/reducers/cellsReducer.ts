@@ -24,7 +24,7 @@ const cellsReducer = produce(
   (
     state: CellsReducerState = initialState,
     action: Action
-  ): CellsReducerState | void => {
+  ): CellsReducerState => {
     switch (action.type) {
       case ActionType.UPDATE_CELL:
         const { id, content } = action.payload;
@@ -68,7 +68,9 @@ const cellsReducer = produce(
       default:
         return state;
     }
-  }
+  },
+  // - or ts doesn't like annotate type
+  initialState
 );
 
 //
