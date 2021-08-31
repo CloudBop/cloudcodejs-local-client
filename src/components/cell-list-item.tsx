@@ -13,9 +13,9 @@ const CellListItem: React.FC<CellListItemProps> = ({ cell }) => {
   else child = <TextEditor cell={cell} />;
 
   return (
-    <div>
-      <CellActionBar id={cell.id} />
+    <div className="cell-list-item">
       {child}
+      <CellActionBar id={cell.id} />
     </div>
   );
 };

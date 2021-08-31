@@ -1,15 +1,14 @@
 import { useBoundActions } from "../hooks/use-bound-action";
-
+import "./cell-action-bar.css";
 interface ICellActionBarProps {
   id: string;
 }
 
 const CellActionBar: React.FC<ICellActionBarProps> = ({ id }) => {
   const { moveCell, deleteCell } = useBoundActions();
-
   // todo - refactored into ActionButton({variant: arrow-down})
   return (
-    <div>
+    <div className={"action-bar"}>
       <button
         className="button is-primary is-small"
         onClick={() => moveCell(id, "up")}
