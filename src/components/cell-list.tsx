@@ -10,15 +10,24 @@ const CellList: React.FC = () => {
 
   const renderCells = cells.map((cell) => (
     <Fragment key={cell.id}>
-      <AddCell nextCellId={cell.id} />
       <CellListItem cell={cell} />
+      <AddCell prevCellId={cell.id} />
     </Fragment>
   ));
 
+  // fun hack for fooling react to rerender last element as new
+  // renderCells.push(
+  //   <AddCell
+  //     key={Math.random()}
+  //     forceVisible={cells.length === 0}
+  //     nextCellId={null}
+  //   />
+  // );
+
   return (
     <div>
+      <AddCell forceVisible={cells.length === 0} prevCellId={null} />
       {renderCells}
-      <AddCell forceVisible={cells.length === 0} nextCellId={null} />
     </div>
   );
 };

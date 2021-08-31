@@ -2,19 +2,19 @@ import { useBoundActions } from "../hooks/use-bound-action";
 import "./add-cell.css";
 
 interface IAddCellProps {
-  nextCellId: string | null;
+  prevCellId: string | null;
   // default to false
   forceVisible?: boolean;
 }
 
-const AddCell: React.FC<IAddCellProps> = ({ nextCellId, forceVisible }) => {
+const AddCell: React.FC<IAddCellProps> = ({ prevCellId, forceVisible }) => {
   const { insertCellAfter } = useBoundActions();
   return (
     <div className={`add-cell ${forceVisible && "force-visible"}`}>
       <div className="add-btns">
         <button
           className="button is-rounded is-primary is-small"
-          onClick={() => insertCellAfter(nextCellId, "code")}
+          onClick={() => insertCellAfter(prevCellId, "code")}
         >
           <span className="icon is-smaall">
             <i className="fas fa-plus"></i>
@@ -23,7 +23,7 @@ const AddCell: React.FC<IAddCellProps> = ({ nextCellId, forceVisible }) => {
         </button>
         <button
           className="button is-rounded is-primary is-small"
-          onClick={() => insertCellAfter(nextCellId, "text")}
+          onClick={() => insertCellAfter(prevCellId, "text")}
         >
           <span className="icon is-smaall">
             <i className="fas fa-plus"></i>
