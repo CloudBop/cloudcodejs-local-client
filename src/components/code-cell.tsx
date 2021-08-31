@@ -14,20 +14,33 @@ interface ICodeCellProps {
 const CodeCell: React.FC<ICodeCellProps> = ({ cell }) => {
   const { updateCell, createBundle } = useBoundActions();
   const bundle = useTypedSelector((state) => state.bundles[cell.id]);
-  // const [code, setCode] = useState("");
-  // const [err, setErr] = useState("");
+
+  const cumulativeCode = useTypedSelector((state) => {
+    const { data, order } = state.cells;
+    const orderedCells = order.map((id) => data[id]);
+    const cumulativeCode = [];
+
+    for (let c of orderedCells) {
+      if (c.type === "code") {
+        cumulativeCode.push(c.content);
+      }
+      //
+      if (c.id === cell.id) break;
+    }
+    return cumulativeCode;
+  });
 
   useEffect(() => {
     // including [bundle] will cause infinite loop... ignore exhastive deps
     if (!bundle) {
-      createBundle(cell.id, cell.content);
+      createBundle(cell.id, cumulativeCode.join("\n"));
       // on inital load ignore first setTimeout.
       return;
     }
 
     let timer = setTimeout(async () => {
       // thunk fires async actions
-      await createBundle(cell.id, cell.content);
+      await createBundle(cell.id, cumulativeCode.join("\n"));
     }, 1000);
 
     return () => {
@@ -36,7 +49,7 @@ const CodeCell: React.FC<ICodeCellProps> = ({ cell }) => {
     };
     // if in render phase or as props - ensure createBundle is memoed or will cause useEffect to fire every pass
     // eslint-disable-next-line
-  }, [cell.id, cell.content, createBundle]);
+  }, [cell.id, cell.content, createBundle, cumulativeCode.join("\n")]);
 
   return (
     <Resizable direction="vertical">
