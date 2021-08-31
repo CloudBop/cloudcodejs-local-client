@@ -3,11 +3,15 @@ import { ActionType } from "../action-types";
 import { Action } from "../actions";
 
 interface BundleState {
-  [key: string]: {
-    loading: boolean;
-    code: string;
-    err: string;
-  };
+  [key: string]:
+    | {
+        loading: boolean;
+        code: string;
+        err: string;
+        //
+      }
+    // allow state to be undefined
+    | undefined;
 }
 
 const initialState: BundleState = {};
@@ -37,7 +41,9 @@ const bundleReducer = produce(
       default:
         return state;
     }
-  }
+  },
+  // || ts complains.
+  initialState
 );
 
 export default bundleReducer;
