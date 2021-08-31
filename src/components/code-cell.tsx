@@ -27,8 +27,8 @@ const CodeCell: React.FC<ICodeCellProps> = ({ cell }) => {
       // offMount|rerender
       clearTimeout(timer);
     };
-    // if in render phase or as props
-  }, [cell.id, cell.content]);
+    // if in render phase or as props - ensure createBundle is memoed or will cause useEffect to fire every pass
+  }, [cell.id, cell.content, createBundle]);
 
   return (
     <Resizable direction="vertical">
