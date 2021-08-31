@@ -40,7 +40,8 @@ const CodeCell: React.FC<ICodeCellProps> = ({ cell }) => {
     <Resizable direction="vertical">
       <div
         style={{
-          height: "100%",
+          // minus .add-cell ui margin
+          height: "calc(100% - 10px)",
           // width: "100%",
           display: "flex",
           flexDirection: "row",
