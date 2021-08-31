@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
-import bundle from "../bundler";
+import { useEffect } from "react";
+// import bundle from "../bundler";
 import { useBoundActions } from "../hooks/use-bound-action";
+import { useTypedSelector } from "../hooks/use-typed-selector";
 import { Cell } from "../reduxStore";
 import CodeEditor from "./code-editor";
 import Preview from "./code-preview";
@@ -11,30 +12,23 @@ interface ICodeCellProps {
 }
 
 const CodeCell: React.FC<ICodeCellProps> = ({ cell }) => {
-  const { updateCell } = useBoundActions();
-  // const [input, setInput] = useState("");
-
-  const [code, setCode] = useState("");
-  const [err, setErr] = useState("");
-  // const onClick = async () => {
-  //   const output = await bundle(input);
-  //   setCode(output);
-  // };
-
+  const { updateCell, createBundle } = useBoundActions();
+  const bundle = useTypedSelector((state) => state.bundles[cell.id]);
+  // const [code, setCode] = useState("");
+  // const [err, setErr] = useState("");
+  console.log(bundle);
   useEffect(() => {
     let timer = setTimeout(async () => {
-      const output = await bundle(cell.content);
-      setCode(output.code);
-      setErr(output.err);
+      // thunk fires async actions
+      await createBundle(cell.id, cell.content);
     }, 1000);
 
     return () => {
       // offMount|rerender
       clearTimeout(timer);
     };
-  }, [cell.content]);
-
-  console.log(`err`, err);
+    // if in render phase or as props
+  }, [cell.id, cell.content]);
 
   return (
     <Resizable direction="vertical">
@@ -54,7 +48,7 @@ const CodeCell: React.FC<ICodeCellProps> = ({ cell }) => {
             onChange={(value) => updateCell(cell.id, value)}
           />
         </Resizable>
-        <Preview code={code} bundlingError={err} />
+        {bundle && <Preview code={bundle.code} bundlingError={bundle.err} />}
       </div>
     </Resizable>
   );
