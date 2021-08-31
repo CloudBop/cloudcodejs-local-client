@@ -6,7 +6,7 @@ import { Cell } from "../reduxStore";
 import CodeEditor from "./code-editor";
 import Preview from "./code-preview";
 import Resizable from "./resizable";
-
+import "./code-cell.css";
 interface ICodeCellProps {
   cell: Cell;
 }
@@ -56,7 +56,15 @@ const CodeCell: React.FC<ICodeCellProps> = ({ cell }) => {
             onChange={(value) => updateCell(cell.id, value)}
           />
         </Resizable>
-        {bundle && <Preview code={bundle.code} bundlingError={bundle.err} />}
+        {!bundle || bundle.loading ? (
+          <div className="progress-cover">
+            <progress className="progress is-small is-primary" max="100">
+              loading
+            </progress>
+          </div>
+        ) : (
+          <Preview code={bundle.code} bundlingError={bundle.err} />
+        )}
       </div>
     </Resizable>
   );
