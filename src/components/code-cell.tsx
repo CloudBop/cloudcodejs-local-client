@@ -1,10 +1,19 @@
 import { useState, useEffect } from "react";
 import bundle from "../bundler";
+import { useBoundActions } from "../hooks/use-bound-action";
+import { Cell } from "../reduxStore";
 import CodeEditor from "./code-editor";
 import Preview from "./code-preview";
 import Resizable from "./resizable";
-const CodeCell = () => {
-  const [input, setInput] = useState("");
+
+interface ICodeCellProps {
+  cell: Cell;
+}
+
+const CodeCell: React.FC<ICodeCellProps> = ({ cell }) => {
+  const { updateCell } = useBoundActions();
+  // const [input, setInput] = useState("");
+
   const [code, setCode] = useState("");
   const [err, setErr] = useState("");
   // const onClick = async () => {
@@ -14,7 +23,7 @@ const CodeCell = () => {
 
   useEffect(() => {
     let timer = setTimeout(async () => {
-      const output = await bundle(input);
+      const output = await bundle(cell.content);
       setCode(output.code);
       setErr(output.err);
     }, 1000);
@@ -23,7 +32,7 @@ const CodeCell = () => {
       // offMount|rerender
       clearTimeout(timer);
     };
-  }, [input]);
+  }, [cell.content]);
 
   console.log(`err`, err);
 
@@ -40,8 +49,8 @@ const CodeCell = () => {
       >
         <Resizable direction={"horizontal"}>
           <CodeEditor
-            initialValue={"const a = 1;"}
-            onChange={(value): void => setInput(value)}
+            initialValue={cell.content}
+            onChange={(value) => updateCell(cell.id, value)}
           />
         </Resizable>
         <Preview code={code} bundlingError={err} />
