@@ -8,6 +8,17 @@
   top: 50%;
   bottom: 50%;
   border-bottom: 1px solid grey;
-  width: 100%;
+  width: 95%;
   z-index: -1;
+  right: 2.5%;
+  left: 2.5%;
+}
+
+.add-cell .add-btns {
+  display: flex;
+  justify-content: center;
+}
+
+.add-cell .add-btns > button {
+  margin: 0 20px;
 }
