@@ -6,11 +6,34 @@ interface ICellActionBarProps {
 
 const CellActionBar: React.FC<ICellActionBarProps> = ({ id }) => {
   const { moveCell, deleteCell } = useBoundActions();
+
+  // todo - refactored into ActionButton({variant: arrow-down})
   return (
     <div>
-      <button onClick={() => moveCell(id, "up")}>Up</button>
-      <button onClick={() => moveCell(id, "down")}>Down</button>
-      <button onClick={() => deleteCell(id)}>Delete</button>
+      <button
+        className="button is-primary is-small"
+        onClick={() => moveCell(id, "up")}
+      >
+        <span className="icon">
+          <i className="fas fa-arrow-up"></i>
+        </span>
+      </button>
+      <button
+        onClick={() => moveCell(id, "down")}
+        className="button is-primary is-small"
+      >
+        <span className="icon">
+          <i className="fas fa-arrow-down"></i>
+        </span>
+      </button>
+      <button
+        onClick={() => deleteCell(id)}
+        className="button is-primary is-small"
+      >
+        <span className="icon">
+          <i className="fas fa-times"></i>
+        </span>
+      </button>
     </div>
   );
 };
