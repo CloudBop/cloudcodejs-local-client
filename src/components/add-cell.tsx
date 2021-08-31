@@ -3,12 +3,14 @@ import "./add-cell.css";
 
 interface IAddCellProps {
   nextCellId: string | null;
+  // default to false
+  forceVisible?: boolean;
 }
 
-const AddCell: React.FC<IAddCellProps> = ({ nextCellId }) => {
+const AddCell: React.FC<IAddCellProps> = ({ nextCellId, forceVisible }) => {
   const { insertCellBefore } = useBoundActions();
   return (
-    <div className="add-cell">
+    <div className={`add-cell ${forceVisible && "force-visible"}`}>
       <div className="add-btns">
         <button
           className="button is-rounded is-primary is-small"
