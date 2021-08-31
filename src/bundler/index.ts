@@ -31,6 +31,9 @@ export default async function esbuildBundler(rawCodeInput: string) {
         // webpack also does something similar, setting global
         global: "window",
       },
+      //  use inbuilt version of react, esdom avoids bundling 2x react
+      jsxFactory: "_React.createElement",
+      jsxFragment: "_React.Fragment",
     });
     return {
       code: result.outputFiles[0].text,
