@@ -58,6 +58,10 @@ export interface FectchCellsErrorAction {
   type: ActionType.FETCH_CELLS_ERROR;
   payload: string;
 }
+export interface SaveCellsErrorAction {
+  type: ActionType.SAVE_CELLS_ERROR;
+  payload: string;
+}
 
 // union type
 export type Action =
@@ -69,4 +73,5 @@ export type Action =
   | BundleCompleteAction
   | FectchCellsAction
   | FectchCellsCompleteAction
-  | FectchCellsErrorAction;
+  | FectchCellsErrorAction
+  | SaveCellsErrorAction;
