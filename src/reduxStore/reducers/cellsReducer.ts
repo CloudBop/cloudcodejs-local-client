@@ -68,10 +68,25 @@ const cellsReducer = produce(
         //insertBefore
         // if (idx < 0) state.order.push(newCell.id);
         // else state.order.splice(idx, 0, newCell.id);
-
         //...but TS will typecheck state as [ ... | undefined ]
         return state;
       }
+      case ActionType.FETCH_CELLS:
+        state.loading = true;
+        state.error = null;
+        return state;
+      case ActionType.FETCH_CELLS_COMPLETE:
+        state.order = action.payload.map((cell) => cell.id);
+        state.data = action.payload.reduce((acc, cell) => {
+          acc[cell.id] = cell;
+          return acc;
+          // tell typescript it should use this interface data
+        }, {} as CellsReducerState["data"]);
+        return state;
+      case ActionType.FETCH_CELLS_ERROR:
+        state.loading = false;
+        state.error = action.payload;
+        return state;
       default:
         return state;
     }
