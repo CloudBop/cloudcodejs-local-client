@@ -18,12 +18,10 @@ const CodeCell: React.FC<ICodeCellProps> = ({ cell }) => {
   const cumulativeCode = useTypedSelector((state) => {
     const { data, order } = state.cells;
     const orderedCells = order.map((id) => data[id]);
-    const cumulativeCode = [
-      // global - bundle _React - esbuild will tree shake out duplicate react imports
-      `
-      import _React from 'react'
+    const showFunc = `
+    import _React from 'react'
       import _ReactDOM from 'react-dom'
-        const show = (value)=>{
+        var show = (value)=>{
           const root = document.querySelector('#root')
 
           if(typeof value === "object"){
@@ -38,11 +36,20 @@ const CodeCell: React.FC<ICodeCellProps> = ({ cell }) => {
             root.innerHTML = value;
           }
         }
-      `,
+    `;
+    // overrule show from prev block
+    const showFuncNoop = `var show = ()=>{}`;
+    const cumulativeCode = [
+      // global - bundle _React - esbuild will tree shake out duplicate react imports
     ];
 
     for (let c of orderedCells) {
       if (c.type === "code") {
+        //
+        if (c.id === cell.id) cumulativeCode.push(showFunc);
+        // invalidate show() - stops show() if used in prev block but not !current
+        else cumulativeCode.push(showFuncNoop);
+        //
         cumulativeCode.push(c.content);
       }
       //
