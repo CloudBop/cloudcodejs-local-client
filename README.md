@@ -1,4 +1,13 @@
-# Getting Started with Create React App
+# cloudcodejs-local-cloent
+
+A React code editor that transpiles JS in the browser.
+
+## see branches for more detail.
+
+- lerna branch is published on npm registry
+- other branches fairly self explanatory
+
+## Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
